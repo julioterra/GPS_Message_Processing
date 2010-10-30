@@ -17,6 +17,7 @@ void read_msg(char newChar) {
   } else if (msgStart == true && msgEnd == true) {
       if (confirm_checksum(nmeaMsg, sizeof(nmeaMsg))) {
          parse_msg();
+//         printMsg(nmeaMsg, sizeof(nmeaMsg));
       } 
       msgStart = false;
   }
@@ -33,11 +34,11 @@ void parse_msg() {
     parse_element(GGAlattitudeLoc, lattitude, sizeof(lattitude));
     parse_element(GGAlongitudeLoc, longitude, sizeof(longitude));
     if (nmeaMsg[GGAfixValidLoc] == '1' || nmeaMsg[GGAfixValidLoc] == '2') { 
-      for (int i = 0; i < sizeof(timeStamp); i++) lastValidReading[i] = timeStamp[i]; }
+        for (int i = 0; i < sizeof(timeStamp); i++) lastValidReading[i] = timeStamp[i]; }
     else { locValid = false; }
-    
     print_gps_data();
     Serial.println();
+
 }
 
 

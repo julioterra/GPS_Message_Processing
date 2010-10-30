@@ -31,7 +31,7 @@ char lastValidReading[] = {'0','0','0','0','0','0','0','0','0','0'};
 
 void setup()  
 {
-  Serial.begin(57600);      // initialize serial port for Data Output 
+  Serial.begin(9600);      // initialize serial port for Data Output 
   mySerial.begin(4800);     // initialize serial port for GPS
 }
 
@@ -39,15 +39,20 @@ void setup()
 void loop()                     
 {
   // read data from the GPS unit 
-  if (mySerial.available()) { read_msg((char)mySerial.read()); }
+  if (mySerial.available()) { 
+    read_msg((char)mySerial.read()); 
+  }
 
-  // change the messages sent by GPS, and the rate of updates
-  if (Serial.available()) {
-      char msgID = (char)Serial.read();
-      int msgRate = 1;
-      changeRateMsg(msgID, msgRate);
-    }
+
+//  UNCOMMENT AND CHANGE TO send messages to GPS to change settings regarding availability and the rate of updates
+//  if (Serial.available()) {
+//      char msgID = (char)Serial.read();
+//      int msgRate = 1;
+//      changeRateMsg(msgID, msgRate);
+//    }
+
 }
+
 
 
 // DEBUG CODE: print message to serial port for debugging

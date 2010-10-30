@@ -2,15 +2,32 @@
 
 NewSoftSerial mySerial(2, 12);
 
-#define ctrlIDFirst        9
-#define ctrlIDSecond       10
-#define rateRequestMode    13
-#define ctrlRateFirst      15
-#define ctrlRateSecond     16
+#define rateRequestIDFirst       9
+#define rateRequestIDSecond      10
+#define rateRequestMode          13
+#define rateRequestRateFirst     15
+#define rateRequestRateSecond    16
 
+#define GGAtimeLoc               7
+#define GGAlattitudeLoc          18
+#define GGAlongitudeLoc          30
+#define GGAfixValidLoc           43
+
+// variables for reading in data from GPS
 char nmeaMsg[300];
+int msgIndex = 0;
+char checksumMsg[2];
+int checksumIndex = 0;
 boolean msgStart = false;
 boolean msgEnd = false;
+
+// variables for printing out data from GPS
+char lattitude[] = {'0','0','0','0','0','0','0','0','0','0','0'};
+char longitude[] = {'0','0','0','0','0','0','0','0','0','0','0','0'};
+char timeStamp[] = {'0','0','0','0','0','0','0','0','0','0'};
+boolean locValid = false;
+char lastValidReading[] = {'0','0','0','0','0','0','0','0','0','0'};
+
 
 void setup()  
 {
@@ -21,21 +38,35 @@ void setup()
 
 void loop()                     
 {
-  // Print to screen the messages from 
-  if (mySerial.available()) { 
-      char tempChar = (char)mySerial.read();
-      Serial.print(tempChar); 
-  }
+  // read data from the GPS unit 
+  if (mySerial.available()) { read_msg((char)mySerial.read()); }
+
+  // change the messages sent by GPS, and the rate of updates
   if (Serial.available()) {
-      char tempChar = (char)Serial.read();
-      changeRateMsg(tempChar, 5);
-  }
+      char msgID = (char)Serial.read();
+      int msgRate = 1;
+      changeRateMsg(msgID, msgRate);
+    }
 }
 
-void read_msg(char) {
-  
+
+// DEBUG CODE: print message to serial port for debugging
+void printMsg(char msg[], int len) {
+      for(int i = 0; i < len; i++) {
+          if(msg[i] != byte(13)) Serial.print(msg[i]); 
+          else break;
+      }
+      Serial.println();
 }
 
+// OUTPUT CODE: publish the proper message to the serial port for logging
+void publishMsg(char msg[], int len) {
+      for(int i = 0; i < len; i++) {
+          if(msg[i] != byte(13)) Serial.print(msg[i]); 
+          else break;
+      }
+      Serial.print(',');
+}
 
 
 

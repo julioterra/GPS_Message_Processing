@@ -2,12 +2,16 @@
  * GET_CHECKSUM FUNCTION - calculates the checksum of messages to be sent 
  ************/
 int get_checksum(char msg[], int len) {
+//  DEBUG MSGs: uncomment these lines for the msgs to print out on the serial window
+//  Serial.print("checksum ");
+//  printMsg(msg, len);
+
   byte checksum = 0;                                    // create checksum variable and set it to 0
   for (int i = 0; i < len; i++) {                         // loop through each element in the message
     if (msg[i] == '$') {                                  // IF start characters is found ('$')
       i++; checksum = msg[i]; }                            // set the checksum to using the first character in the message
-    else if (msg[i] != '*') { checksum ^= msg[i]; }  // ELSE IF msgStarted is set to true then calculate the checksum
-    else { return checksum; }                 // ELSE IF the end of the message has been found ('*') get out of the loop
+    else if (msg[i] == '*') { break; }                 // ELSE IF the end of the message has been found ('*') get out of the loop
+    else { checksum ^= msg[i]; }  // ELSE IF msgStarted is set to true then calculate the checksum
   }    
   return checksum;                                        // return the checksum
 }
@@ -37,10 +41,10 @@ boolean confirm_checksum(char msg[], int len){
   int checksumPos = 0;
   int tempChecksum = 0;
   
-  tempChecksum = get_checksum(msg, sizeof(msg));
+  tempChecksum = get_checksum(msg, len);
   checksum_hex_to_ascii(tempChecksum, hexChecksumCalc);
 
-  for(int i = 0; i < len; i++) { if (msg[i] == '*') checksumPos = i++; }
+  for(int i = 0; i < len; i++) { if (msg[i] == '*') checksumPos = i + 1; }
   hexChecksumOrig[0] = msg[checksumPos];
   hexChecksumOrig[1] = msg[checksumPos+1];
 

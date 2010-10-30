@@ -1,5 +1,5 @@
 void requestMsg(char ID) { 
-  sendMsg(ID, 0, 1);  
+  sendMsg(ID, 1, 1);  
 }
 
 
@@ -15,10 +15,10 @@ void sendMsg(char ID, int rate, int requestOrRate) {
      char hexRate[2] = {0,0};    
 
      checksum_hex_to_ascii(rate, hexRate);              // convert rate int value to a hexadecimal string
-     genCtrlRateMsg[ctrlIDSecond] = ID;                 // update message ID
+     genCtrlRateMsg[rateRequestIDSecond] = ID;                 // update message ID
      genCtrlRateMsg[rateRequestMode] = byte(requestOrRate + 48);    // update request or rate flag
-     genCtrlRateMsg[ctrlRateFirst] = hexRate[0];        // update first number of rate definition
-     genCtrlRateMsg[ctrlRateSecond] = hexRate[1];       // update second number of rate definition
+     genCtrlRateMsg[rateRequestRateFirst] = hexRate[0];        // update first number of rate definition
+     genCtrlRateMsg[rateRequestRateSecond] = hexRate[1];       // update second number of rate definition
   
      int getCheckSum = get_checksum(genCtrlRateMsg, sizeof(genCtrlRateMsg));
      checksum_hex_to_ascii(getCheckSum, checkSumArray);
